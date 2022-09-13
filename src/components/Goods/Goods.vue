@@ -4,28 +4,79 @@
     <div class="thumb">
       <div class="custom-control custom-checkbox">
         <!-- 复选框 -->
-        <input type="checkbox" class="custom-control-input" id="cb1" :checked="true" />
-        <label class="custom-control-label" for="cb1">
+        <input
+          type="checkbox"
+          class="custom-control-input"
+          :id="'cb' + id"
+          :checked="state"
+          @change="stateChange"
+        />
+        <label class="custom-control-label" :for="'cb' + id">
           <!-- 商品的缩略图 -->
-          <img src="../../assets/logo.png" alt="" />
+          <img :src="pic" alt="" />
         </label>
       </div>
     </div>
     <!-- 右侧信息区域 -->
     <div class="goods-info">
       <!-- 商品标题 -->
-      <h6 class="goods-title">商品名称商品名称商品名称商品名称</h6>
+      <h6 class="goods-title">{{ title }}</h6>
       <div class="goods-info-bottom">
         <!-- 商品价格 -->
-        <span class="goods-price">￥0</span>
+        <span class="goods-price">￥{{ pri }}</span>
         <!-- 商品的数量 -->
+        <Counter :num="count" :id="id"></Counter>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+// 导入需要使用的组件
+import Counter from "@/components/Counter/Counter.vue";
+export default {
+  components: {
+    Counter,
+  },
+  props: {
+    // 商品id
+    id: {
+      required: "true",
+      type: Number,
+    },
+    // 商品标题
+    title: {
+      default: "",
+      type: String,
+    },
+    // 商品缩略图
+    pic: {
+      default: "",
+      type: String,
+    },
+    // 商品单价
+    pri: {
+      default: 0,
+      type: Number,
+    },
+    // 商品的勾选状态
+    state: {
+      default: "ture",
+      type: Boolean,
+    },
+    // 商品的数量
+    count: {
+      type: Number,
+      default: 1,
+    },
+  },
+  methods: {
+    stateChange(e) {
+      // 1. 监听复选框的change事件，定义并触发state-change事件，将id和state传递给父组件
+      this.$emit("state-change", { id: this.id, state: e.target.checked });
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
